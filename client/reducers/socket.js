@@ -6,7 +6,7 @@ import io from 'socket.io-client'
 
 const url = process.env.ENVIRONMENT == 'production'
   ? window.location.href
-  :'http://localhost:8000'
+  : process.env.ENVIRONMENT == 'home' ? '27.252.203.145:4001' : 'http://localhost:8000'
 
 const socket = io(url)
 
