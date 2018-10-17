@@ -10,8 +10,6 @@ import GameOver from './GameOver'
 import IntentionsSuspense from './IntentionsSuspense'
 import {getGameState} from '../../actions/currentGame'
 
-// ReadyButton appears to leader, when socket is occupied by > 5 and < 10
-
 class Game extends React.Component {
   constructor(props) {
     super(props)
@@ -30,7 +28,7 @@ class Game extends React.Component {
   }
 
   componentDidMount() {
-    const gameId = this.props.match.params.id  //we are getting room id via params until redux holds room id correctly
+    const gameId = this.props.match.params.id
     let user_name = this.props.auth.user.user_name
     let localSocket = this.props.socket
     localSocket.emit('joinGame', gameId, user_name)
