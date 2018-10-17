@@ -3,8 +3,6 @@ import { connect } from 'react-redux'
 
 import Mission from './Mission'
 import Player from './Player'
-import RoundCounter from './RoundCounter'
-import DataButton from './DataButton'
 
 import { getPlayers } from '../../actions/games'
 import { getGames } from '../../api/games'
@@ -49,26 +47,26 @@ export class GameBoard extends React.Component {
           })}
         </div>
         <div className='column is-8'>
-        <h1>{players.map((x, i) => {
-          if (x.role == 'spy') return <img key={i} className="spyIcon" src="/spy.png" />
-        })}</h1>
+          <h1>{players.map((x, i) => {
+            if (x.role == 'spy') return <img key={i} className="spyIcon" src="/spy.png" />
+          })}</h1>
 
-        <div className="mission-board">
-        <p className="is-size-3 has-text-white">Missions</p>
-        <div className="level missionDisplay">
-          {missionDisplay.map((mission, i) => {
-            return <Mission key={i} mission={mission} number={i}  />
-          })}
+          <div className="mission-board">
+            <p className="is-size-3 has-text-white">Missions</p>
+            <div className="level missionDisplay">
+              {missionDisplay.map((mission, i) => {
+                return <Mission key={i} mission={mission} number={i}  />
+              })}
 
+            </div>
+            <p className="voteTrack is-size-3 has-text-white">Vote Track</p>
+            <div className="RoundContainer is-centered columns">
+              {Array(5).fill(0).map((x, i) => (
+                <span className={`${i + 1 === round_num && "cake"} column is-size-2 has-text-white`}>{i + 1}</span>
+            ))}
+            </div>
+          </div>
         </div>
-        <p className="voteTrack is-size-3 has-text-white">Vote Track</p>
-        <div className="columns is-centered">
-                 {Array(5).fill(0).map((x, i) => {
-          return <RoundCounter key={i} number={i + 1} round_num={round_num}/>
-         })}
-        </div>
-      </div>
-      </div>
 
 
         <div className="column is-2">
