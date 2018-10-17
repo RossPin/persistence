@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import {Tooltip} from 'react-tippy'
 import PlayerToolTip from './PlayerToolTip'
+import profileImgError from '../../utils/profileImgError'
 
 const roundStyleObj = {
   borderRadius: "50%",
@@ -31,7 +32,7 @@ class EmptyPlayer extends React.Component {
 
                 <div className="player" >
                 <p className="has-text-white is-size-5"> {display_name || user_name} </p>
-                <img style={roundStyleObj} src={img} />
+                <img style={roundStyleObj} src={img} onError={e => profileImgError(e)}/>
             </div>
 
 
