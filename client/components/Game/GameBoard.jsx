@@ -4,20 +4,14 @@ import { connect } from 'react-redux'
 import Mission from './Mission'
 import Player from './Player'
 
-import { getPlayers } from '../../actions/games'
-import { getGames } from '../../api/games'
-import { updateCurrentGame } from '../../actions/currentGame'
-
 export class GameBoard extends React.Component {
-  render() {
-    const {currentGame} = this.props
+  render() {    
     const {
-      players,
-      game,
+      players,      
       missions,
       currentMission,
       currentRound
-    } = currentGame
+    } = this.props.currentGame
 
     const { mission_num } = currentMission
     const { round_num, leader_id } = currentRound
