@@ -9,12 +9,11 @@ class Waiting extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-    }
-    this.checkStarted = this.checkStarted.bind(this)
+    }    
   }
 
-  checkStarted(){
-    if (this.props.currentGame.game.in_progress){
+  componentWillReceiveProps(nextProps){
+    if (nextProps.currentGame.game.in_progress){
       this.props.history.push(`/game/${this.props.match.params.id}`)
     }
   }
@@ -38,27 +37,21 @@ class Waiting extends React.Component {
 
     return (
       <div>
-        <ChatWindow id={gameId} />
-        {this.checkStarted()}
+        <ChatWindow id={gameId} />        
         <div className='is-size-3 statusBar' >
           <p className="has-text-white">Waiting for Players</p>
         </div>
-
-
-
-      {(host_id == this.props.auth.user.id && players.length > 1) && <ReadyButton />}
-
-      <div className="level">
-        {players.map((player, i) => {
-          return (
-            <div key={i} className="level-item">
-            <EmptyPlayer player={player} />
-            </div>
-          )
-        })}
+        {(host_id == this.props.auth.user.id && players.length > 1) && <ReadyButton />}
+        <div className="level">
+          {players.map((player, i) => {
+            return (
+              <div key={i} className="level-item">
+              <EmptyPlayer player={player} />
+              </div>
+            )
+          })}
+        </div>
       </div>
-
-    </div>
   )
 
 }
