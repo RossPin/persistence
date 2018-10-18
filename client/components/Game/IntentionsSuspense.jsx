@@ -1,5 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import profileImgError from '../../utils/profileImgError'
 
 const roundStyleObj = {
     borderRadius: "50%",
@@ -70,11 +71,11 @@ class IntentionsSuspense extends React.Component {
             The Team:
           </h2>
           <div className="columns is-multiline  modal-color">
-            {team.map(player => <div className="has-text-white column is-4">{player.user_name}<img style={roundStyleObj} src={player.img} /></div>)}
+            {team.map((player, i) => <div key={i} className="has-text-white column is-4">{player.user_name}<img style={roundStyleObj} src={player.img} onError={e => profileImgError(e)}/></div>)}
           </div>
           <hr />
           <div className="has-text-centered columns  modal-color is-multiline">
-            {intentions.map((intention, i) => <div className={`column is-${12 / intentions.length} modal-color box ${
+            {intentions.map((intention, i) => <div key={i} className={`column is-${12 / intentions.length} modal-color box ${
               i < revealed
                 ? ''
                 : intention ? 'has-text-success' : 'has-text-danger'
