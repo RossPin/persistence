@@ -19,15 +19,21 @@ class Lobby extends React.Component {
   }
 
   componentDidMount() {
+    this.mounted = true
     const { socket } = this.props
     socket.emit('getGames')
     socket.on('receiveGames', (games) => {      
-      this.setState({
+      if(this.mounted) this.setState({
         games: games
       })
     })
     this.props.dispatch(resetCurrentGame)
-}
+  }
+
+  componentWillUnmount(){
+    this.mounted = false
+  }
+
   clickJoinGame(game, user) {
     joinGame({game, user})
       .then(res => {
