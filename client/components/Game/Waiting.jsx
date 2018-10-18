@@ -13,8 +13,10 @@ class Waiting extends React.Component {
   }
 
   componentWillReceiveProps(nextProps){
-    if (nextProps.currentGame.game.in_progress){
-      this.props.history.push(`/game/${this.props.match.params.id}`)
+    const {in_progress, id} = nextProps.currentGame.game
+    const gameId = Number(this.props.match.params.id)
+    if (in_progress && id === gameId){
+      this.props.history.push(`/game/${gameId}`)
     }
   }
 
@@ -30,10 +32,10 @@ class Waiting extends React.Component {
     })
   }
 
-  render() {
-    const { players } = this.props.currentGame
-    const {host_id} = this.props.currentGame.game
-    const gameId = this.props.match.params.id
+  render() {    
+    const {host_id, id} = this.props.currentGame.game
+    const gameId = Number(this.props.match.params.id)
+    const players = gameId === id ? this.props.currentGame.players : []
 
     return (
       <div>
