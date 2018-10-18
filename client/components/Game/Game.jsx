@@ -28,19 +28,27 @@ class Game extends React.Component {
   }
 
   componentDidMount() {
+    this.mounted = true
     const gameId = this.props.match.params.id
     let user_name = this.props.auth.user.user_name
     let localSocket = this.props.socket
     localSocket.emit('joinGame', gameId, user_name)
     localSocket.on('receiveUpdateGame', (gameData) => {
-      const { dispatch } = this.props
-      clearTimeout(this.timeout)
-      dispatch(updateCurrentGame(gameData.currentGame))
-      this.timeout = setTimeout(() => {
-        this.getData()
-      },30000)     
+      if (this.mounted) {
+        const { dispatch } = this.props
+        clearTimeout(this.timeout)
+        dispatch(updateCurrentGame(gameData.currentGame))
+        this.timeout = setTimeout(() => {
+          if (this.mounted && !this.state.gameOver) this.getData()
+        },30000)
+      }     
     })
     this.getData()
+  }
+
+  componentWillUnmount(){
+    clearTimeout(this.timeout)
+    this.mounted = false
   }
 
 
@@ -55,10 +63,10 @@ class Game extends React.Component {
     const gameId = this.props.match.params.id
     clearTimeout(this.timeout)
     this.props.dispatch(getGameState(gameId)).then(() => {
-      console.log('data update on timeout')
+      console.log('data update on timeout')      
       this.timeout = setTimeout(() => {
-        this.getData()
-      },60000)
+        if (this.mounted && !this.state.gameOver) this.getData()
+      },30000)
     })    
   }
 
@@ -97,6 +105,7 @@ class Game extends React.Component {
   }
 
   hideGameOver() {
+    clearTimeout(this.timeout)
     this.setState({ gameOver: false })
   }
 
