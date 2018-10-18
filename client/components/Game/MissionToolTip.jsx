@@ -16,9 +16,9 @@ const MissionToolTip = props => {
 
     return (
         <div>
-            {missionTeam && missionTeam.map(member => {
+            {missionTeam && missionTeam.map((member, i) => {
                 let player = props.players.find(x => x.id == member.user_id)
-                return <p className="has-text-weight-bold">{player.display_name || player.user_name}</p>
+                return <p key={i} className="has-text-weight-bold">{player.display_name || player.user_name}</p>
             })}
             <div>
                 {(outcome !== null) && <div className="level"> <p className="is-size-5 has-text-weight-bold">{passes ? passes : 0}</p> <img className='tinyThumbLeft level-item' src='/fist.png'/>
