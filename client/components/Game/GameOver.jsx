@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
-
 import {Tooltip} from 'react-tippy'
+import profileImgError from '../../utils/profileImgError'
 
 const roundStyleObj = {
   borderRadius: "50%",
@@ -39,7 +39,7 @@ class GameOver extends React.Component{
                   </div>
                   <hr />
                   <div className="columns is-multiline modal-color">
-                    {goodies.map((goody, i) => <div className={`column is-${
+                    {goodies.map((goody, i) => <div key={i} className={`column is-${
                       goodies.length % 2 == 1 && i == goodies.length - 1 ? '12' : '6'}`}>
                       <Tooltip
                           // options
@@ -49,7 +49,7 @@ class GameOver extends React.Component{
                             <h1>{goody.display_name || goody.user_name} - Loyalist</h1>
                           )}
                       >
-                        <img style={roundStyleObj} src={goody.img} />
+                        <img style={roundStyleObj} src={goody.img} onError={e => profileImgError(e)}/>
                       </Tooltip>
                     </div>)}
                   </div>
@@ -63,7 +63,7 @@ class GameOver extends React.Component{
                   </div>
                   <hr />
                   <div className="columns is-multiline modal-color">
-                    {players.filter(isRole('spy')).map(spy => <div className="column is-12">
+                    {players.filter(isRole('spy')).map((spy, i) => <div key={i} className="column is-12">
                       <Tooltip
                           // options
                           position="bottom"
@@ -72,7 +72,7 @@ class GameOver extends React.Component{
                             <h1>{spy.display_name || spy.user_name} - Spy</h1>
                           )}
                       >
-                        <img className="spy-glow" style={roundStyleObj} src={spy.img} />
+                        <img className="spy-glow" style={roundStyleObj} src={spy.img} onError={e => profileImgError(e)}/>
                       </Tooltip>
                     </div>)}
                   </div>

@@ -56,7 +56,7 @@ export class GameBoard extends React.Component {
             <p className="voteTrack is-size-3 has-text-white">Vote Track</p>
             <div className="RoundContainer is-centered columns">
               {Array(5).fill(0).map((x, i) => (
-                <span className={`${i + 1 === round_num && "cake"} column is-size-2 has-text-white`}>{i + 1}</span>
+                <span key={i} className={`${i + 1 === round_num && "cake"} column is-size-2 has-text-white`}>{i + 1}</span>
             ))}
             </div>
           </div>

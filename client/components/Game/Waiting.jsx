@@ -9,13 +9,14 @@ class Waiting extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-    }
-    this.checkStarted = this.checkStarted.bind(this)
+    }    
   }
 
-  checkStarted(){
-    if (this.props.currentGame.game.in_progress){
-      this.props.history.push(`/game/${this.props.match.params.id}`)
+  componentWillReceiveProps(nextProps){
+    const {in_progress, id} = nextProps.currentGame.game
+    const gameId = Number(this.props.match.params.id)
+    if (in_progress && id === gameId){
+      this.props.history.push(`/game/${gameId}`)
     }
   }
 
@@ -31,34 +32,28 @@ class Waiting extends React.Component {
     })
   }
 
-  render() {
-    const { players } = this.props.currentGame
-    const {host_id} = this.props.currentGame.game
-    const gameId = this.props.match.params.id
+  render() {    
+    const {host_id, id} = this.props.currentGame.game
+    const gameId = Number(this.props.match.params.id)
+    const players = gameId === id ? this.props.currentGame.players : []
 
     return (
       <div>
-        <ChatWindow id={gameId} />
-        {this.checkStarted()}
+        <ChatWindow id={gameId} />        
         <div className='is-size-3 statusBar' >
           <p className="has-text-white">Waiting for Players</p>
         </div>
-
-
-
-      {(host_id == this.props.auth.user.id && players.length > 1) && <ReadyButton />}
-
-      <div className="level">
-        {players.map((player, i) => {
-          return (
-            <div className="level-item">
-            <EmptyPlayer key={i} player={player} />
-            </div>
-          )
-        })}
+        {(host_id == this.props.auth.user.id && players.length > 1) && <ReadyButton />}
+        <div className="level">
+          {players.map((player, i) => {
+            return (
+              <div key={i} className="level-item">
+              <EmptyPlayer player={player} />
+              </div>
+            )
+          })}
+        </div>
       </div>
-
-    </div>
   )
 
 }

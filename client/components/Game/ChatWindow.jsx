@@ -17,25 +17,26 @@ class ChatWindow extends React.Component {
     }
 
     componentDidMount() {
-        this.state.localSocket.on('chat-up', (msg) => {
-            this.addMsgToChat(msg);
-        })
-        this.state.localSocket.on('joinGame', (id, user_name) => {
-            const msg = {
-                userName: user_name,
-                date: new Date(),
-                chatMessage: `${user_name} has joined the game!`
-            }
-            this.addMsgToChat(msg)
-        })
+      this.mounted = true
+      this.state.localSocket.on('chat-up', (msg) => {
+          if(this.mounted) this.addMsgToChat(msg);
+      })
+      this.state.localSocket.on('joinGame', (id, user_name) => {
+          const msg = {
+              userName: user_name,
+              date: new Date(),
+              chatMessage: `${user_name} has joined the game!`
+          }
+          if(this.mounted) this.addMsgToChat(msg)
+      })
     }
 
-
+    componentWillUnmount(){
+      this.mounted = false
+    }
 
     addMsgToChat(msg) {
         let prevMsgs = this.state.msgs
-
-        // const newMsg = `${new Date}: ${msg}`
         prevMsgs.push(msg)
         this.setState({
             msgs:prevMsgs.map(msg => ({...msg})),
@@ -56,9 +57,6 @@ class ChatWindow extends React.Component {
             date: new Date
         }
         const roomID = this.props.id;
-
-        console.log(newMsg)
-        //this.addMsgToChat(`From Client: ${newMsg}`)
         this.state.localSocket.emit('chat-down', roomID, newMsg)
         }
         this.setState({chatMessage:""})
@@ -71,13 +69,11 @@ class ChatWindow extends React.Component {
     }
 
     render() {
-
-        //console.log("game id is", this.props.id)
         const styleObj = { overflow: 'auto', height: '150px'}
         return (
             <form className="chatWindow" onSubmit={this.submit.bind(this)}>
                 <div className="column is-6 is-offset-3 innerShadow" ref="chats" style={styleObj} >
-                    {this.state.msgs.map((msg, i) => <span>
+                    {this.state.msgs.map((msg, i) => <span key={i}>
                         <p className="level-item has-text-white level-left"><b>{msg.userName}</b> - {msg.chatMessage} - ({moment(msg.date).fromNow()})</p>
                     </span>)}
                 </div>
@@ -88,7 +84,6 @@ class ChatWindow extends React.Component {
             </form>
         )
     }
-
 }
 
 const mapStateToProps = (state) => state
