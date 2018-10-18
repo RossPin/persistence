@@ -18,6 +18,7 @@ function issue (req, res) {
         }
       })
     })
+    .catch(err => res.status(500).send({ message: err.message }))
 }
 
 function createToken (user, secret) {

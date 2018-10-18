@@ -1,13 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import EmptyPlayer from './EmptyPlayer'
-import DataButtonW from './DataButtonW'
 import ReadyButton from './ReadyButton'
 import ChatWindow from './ChatWindow'
-import {updateCurrentRound, updateCurrentGame, updateCurrentMission, updateMissionParams} from '../../actions/currentGame'
-
-
-// ReadyButton appears to leader, when socket is occupied by > 5 and < 10
+import {updateCurrentGame, updateMissionParams} from '../../actions/currentGame'
 
 class Waiting extends React.Component {
   constructor(props) {
@@ -24,14 +20,12 @@ class Waiting extends React.Component {
   }
 
   componentDidMount() {
-    const gameId = this.props.match.params.id  //we are getting room id via params until redux holds room id correctly
+    const gameId = this.props.match.params.id
     let user_name = this.props.auth.user.user_name
     let localSocket = this.props.socket
     localSocket.emit('joinGame', gameId, user_name)
     localSocket.on('receiveUpdateWaiting', (gameData) => {
-      const {dispatch} = this.props
-      // dispatch(updateCurrentRound(gameData.currentRound))
-      // dispatch(updateCurrentMission(gameData.currentMission))
+      const {dispatch} = this.props      
       dispatch(updateMissionParams(gameData.missionParams))
       dispatch(updateCurrentGame(gameData.currentGame))
     })
@@ -52,7 +46,7 @@ class Waiting extends React.Component {
 
 
 
-      {(this.props.currentGame.game.host_id == this.props.auth.user.id) && <ReadyButton />}
+      {(host_id == this.props.auth.user.id && players.length > 1) && <ReadyButton />}
 
       <div className="level">
         {players.map((player, i) => {

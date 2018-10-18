@@ -51,12 +51,12 @@ class Lobby extends React.Component {
         <br />
         <div className="columns is-4 is-multiline">
           {games.map((game, i) => {
-            return (
-            <div key={i} className="column is-4">
-              <Link onClick={() => this.clickJoinGame(game, user)} className={buttonStyling} to={`/waiting/${game.id}`}>{game.game_name}</Link>
-            </div>
-            )
-          })}
+            if (!game.in_progress || game.playerIds.includes(user.id)) return (
+              <div key={i} className="column is-4">
+                <Link onClick={() => this.clickJoinGame(game, user)} className={buttonStyling} to={`/waiting/${game.id}`}>{game.game_name}</Link>
+              </div>
+              )
+            })}
         </div>
 
       </div>

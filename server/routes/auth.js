@@ -16,15 +16,16 @@ function register (req, res, next) {
     .catch(err => res.status(500).send({message: err.message}))
 }
 
-router.post('/login', token.issue)
+router.post('/login', login, token.issue)
 
-
-// router.get('/protected', token.decode, (req, res) => {
-//   req.user === the user token info
-// })
-
-// router.post('/game', token.deocde, (req, res) => {
-//   gamesDb.createGame(req.user.id, req.body)
-// })
+function login (req, res, next) {
+  const { username } = req.body
+  userExists(username)
+    .then(exists => {
+      if (exists) next()
+      else res.status(400).send({ message: 'User does not exist' })
+    })
+    .catch(err => res.status(500).send({ message: err.message }))
+}
 
 module.exports = router

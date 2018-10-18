@@ -10,7 +10,7 @@ class Register extends React.Component {
       password: '',
       confirm_password: '',
       display_name: '',
-      img: ' '
+      img: ''
     }
     this.updateDetails = this.updateDetails.bind(this)
     this.submit = this.submit.bind(this)

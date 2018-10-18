@@ -26,7 +26,8 @@ router.post('/new', token.decode,(req, res) => {
     initGame(game_id)
     db.getGame(ids[0]).then(game => {
       console.log('new game:' + game.game_name)
-      currentGames[game_id].game = game
+      game.playerIds = []
+      currentGames[game_id].game = game      
       res.json(game)
     })
   })
@@ -48,6 +49,7 @@ router.post('/join', token.decode,(req, res) => {
         db.getPlayers(game_id).then(playersList => {
           currentGames[game_id].players = playersList
           const {game, players, gameStage, missions, currentRound, currentMission, missionParams} = currentGames[game_id]
+          game.playerIds.push(user_id)
           const gameData = {currentGame: {game, players, gameStage, missions, currentRound, currentMission}, missionParams}
           res.json(gameData)
         })  

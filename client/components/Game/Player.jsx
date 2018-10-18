@@ -1,9 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Tooltip } from 'react-tippy'
-import Template from './Template'
 import PlayerToolTip from './PlayerToolTip'
 import { sendNomination, removeNomination } from '../../actions/playerInputs'
+import profileImgError from '../../utils/profileImgError'
 
 
 const roundStyleObj = {
@@ -101,7 +101,7 @@ class Player extends React.Component {
 
                     <div onClick={(isNominating) && this.handleClick} className="player" >
                         <p className="has-text-white is-size-5"> {`${display_name || user_name}`}</p>
-                        <img className={glow} style={roundStyleObj} src={img} />
+                        <img className={glow} style={roundStyleObj} src={img} onError={e => profileImgError(e)}/>
                     </div>
 
 
