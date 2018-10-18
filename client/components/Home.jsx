@@ -2,12 +2,17 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
-function Home(props) {
-    props.history.push(props.auth.isAuthenticated ? "/lobby" : "/login")
+class Home extends React.Component {
+  componentDidMount() {
+    this.props.history.push(this.props.auth.isAuthenticated ? "/lobby" : "/login")
+  }
+    
+  render() {
+    return (
+      <div></div>
+  )
+  }
   
-  return (
-    <div></div>
-)
 }
 
 const mapStateToProps = ({ auth }) => {

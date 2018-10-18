@@ -77,7 +77,7 @@ class ChatWindow extends React.Component {
         return (
             <form className="chatWindow" onSubmit={this.submit.bind(this)}>
                 <div className="column is-6 is-offset-3 innerShadow" ref="chats" style={styleObj} >
-                    {this.state.msgs.map((msg, i) => <span>
+                    {this.state.msgs.map((msg, i) => <span key={i}>
                         <p className="level-item has-text-white level-left"><b>{msg.userName}</b> - {msg.chatMessage} - ({moment(msg.date).fromNow()})</p>
                     </span>)}
                 </div>
