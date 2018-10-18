@@ -19,8 +19,8 @@ function register (req, res, next) {
 router.post('/login', login, token.issue)
 
 function login (req, res, next) {
-  const { username } = req.body
-  userExists(username)
+  const { user_name } = req.body
+  userExists(user_name)
     .then(exists => {
       if (exists) next()
       else res.status(400).send({ message: 'User does not exist' })
