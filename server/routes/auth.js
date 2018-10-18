@@ -20,6 +20,7 @@ router.post('/login', login, token.issue)
 
 function login (req, res, next) {
   const { user_name } = req.body
+  console.log(req.body)
   userExists(user_name)
     .then(exists => {
       if (exists) next()
