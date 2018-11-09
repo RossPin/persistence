@@ -4,6 +4,7 @@ import EmptyPlayer from './EmptyPlayer'
 import ReadyButton from './ReadyButton'
 import ChatWindow from './ChatWindow'
 import {updateCurrentGame, updateMissionParams} from '../../actions/currentGame'
+import AutoPlay from './AutoPlay'
 
 class Waiting extends React.Component {
   constructor(props) {
@@ -44,6 +45,7 @@ class Waiting extends React.Component {
           <p className="has-text-white">Waiting for Players</p>
         </div>
         {(host_id == this.props.auth.user.id && players.length > 1) && <ReadyButton />}
+        {(host_id == this.props.auth.user.id && players.length < 10) && <AutoPlay />}
         <div className="level">
           {players.map((player, i) => {
             return (
