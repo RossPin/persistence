@@ -37,6 +37,7 @@ class Game extends React.Component {
       if (this.mounted) {
         const { dispatch } = this.props
         clearTimeout(this.timeout)
+        delete gameData.currentGame.missionParams
         dispatch(updateCurrentGame(gameData.currentGame))
         this.timeout = setTimeout(() => {
           if (this.mounted && !this.state.gameOver) this.getData()
