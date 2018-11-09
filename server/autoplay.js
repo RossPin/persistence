@@ -9,7 +9,7 @@ function getAutoPlayers(game) {
 function checkAutoPlayers(game_id, callback) {
   const game = currentGames[game_id]
   getAutoPlayers(game).map(autoPlayer => {
-    if (nominateRequired(game, autoPlayer)) makeNomination(game, autoPlayer, callback)
+    if (nominateRequired(game, autoPlayer)) makeNomination(game, game_id, autoPlayer, callback)
     else if (voteRequired(game, autoPlayer)) makeVote(game, game_id, autoPlayer, callback)
     else if (intentionRequired(game, autoPlayer)) makeIntention(game, game_id, autoPlayer, callback)
   })
@@ -19,8 +19,7 @@ function nominateRequired(game, autoPlayer) {
   return (game.currentRound.leader_id === autoPlayer.id && game.gameStage === 'nominating')
 }
 
-function makeNomination(game, autoPlayer, callback) {
-  setTimeout(() => {
+function makeNomination(game, game_id, autoPlayer, callback) {  
     const {id: round_id, round_num} = game.currentRound 
     const {mission_num} = game.currentMission
     const numNominations = game.missionParams[mission_num - 1].team_total
@@ -30,14 +29,13 @@ function makeNomination(game, autoPlayer, callback) {
       db.getNominations(round_id).then(updatedNominations => {
         console.log('nomination recieved')
           game.missions[mission_num-1].rounds[round_num-1].nominations = updatedNominations
-          callback(game)
-          if (updatedNominations.length <= numNominations) makeNomination(game, autoPlayer, callback)
+          callback({currentGame: game})
+          if (updatedNominations.length < numNominations) makeNomination(game, game_id, autoPlayer, callback)
           else checkNominations(game_id, round_id).then(() => {
-            callback(game)
+            callback({currentGame: game})
           })
       })
-    })
-  },2000) 
+    })   
 }
 
 function isNominated(player, nominations) {
@@ -60,13 +58,16 @@ function makeVote(game, game_id, autoPlayer, callback){
   db.castVote(round_id, autoPlayer.id, vote).then(() => {
     console.log('vote recieved')
     checkVotes(game_id, round_id).then(() => {
-      callback(game)
+      callback({currentGame: game})
     })
   })
 }
 
 function intentionRequired(game, autoPlayer) {
-  return (game.gameStage === 'intentions' && autoPlayer.intention != game.currentMission.id)
+  const {round_num} = game.currentRound 
+  const {mission_num} = game.currentMission    
+  const nominations = game.missions[mission_num-1].rounds[round_num-1].nominations
+  return (game.gameStage === 'intentions' && isNominated(autoPlayer, nominations) && autoPlayer.intention != game.currentMission.id)
 }
 
 function makeIntention(game, game_id, autoPlayer, callback) {
@@ -79,7 +80,7 @@ function makeIntention(game, game_id, autoPlayer, callback) {
   db.castIntention(mission_id, autoPlayer.id, intention).then(() => {
     console.log('intention recieved')
     checkIntentions(game_id, mission_id).then(() => {
-      callback(game)
+      callback({currentGame: game})
     })
   })
 }
