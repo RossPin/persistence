@@ -11,6 +11,7 @@ function checkAutoPlayers(game_id, callback) {
   getAutoPlayers(game).map(autoPlayer => {
     if (nominateRequired(game, autoPlayer)) makeNomination(game, autoPlayer, callback)
     else if (voteRequired(game, autoPlayer)) makeVote(game, game_id, autoPlayer, callback)
+    else if (intentionRequired(game, autoPlayer)) makeIntention(game, game_id, autoPlayer, callback)
   })
 }
 
@@ -49,13 +50,13 @@ function selectNominee(game, nominations) {
 }
 
 function voteRequired(game, autoPlayer) {
-  return (game.gameStage === 'voting' && autoPlayer.voted < game.currentRound.round_num)
+  return (game.gameStage === 'voting' && autoPlayer.voted != game.currentRound.id)
 }
 
 function makeVote(game, game_id, autoPlayer, callback){
   const {id: round_id, round_num} = game.currentRound
-  autoPlayer.voted = round_num
-  const vote = Math.random() < 0.5 + round_num*.1
+  autoPlayer.voted = round_id
+  const vote = Math.random() < 0.5 + round_num/10
   db.castVote(round_id, autoPlayer.id, vote).then(() => {
     console.log('vote recieved')
     checkVotes(game_id, round_id).then(() => {
@@ -63,3 +64,24 @@ function makeVote(game, game_id, autoPlayer, callback){
     })
   })
 }
+
+function intentionRequired(game, autoPlayer) {
+  return (game.gameStage === 'intentions' && autoPlayer.intention != game.currentMission.id)
+}
+
+function makeIntention(game, game_id, autoPlayer, callback) {
+  let intention = true
+  const {id: mission_id, mission_num} = game.currentMission
+  autoPlayer.intention = mission_id
+  if (autoPlayer.spy) {
+    intention = Math.random() > 0.3 + mission_num/5
+  }
+  db.castIntention(mission_id, autoPlayer.id, intention).then(() => {
+    console.log('intention recieved')
+    checkIntentions(game_id, mission_id).then(() => {
+      callback(game)
+    })
+  })
+}
+
+module.exports = checkAutoPlayers
