@@ -8,10 +8,8 @@ const {currentGames, initGame} = require('../currentGames')
 
 router.post('/gamedata', (req, res) => {   
   const game_id = req.body.gameId
-  if (currentGames[game_id]) {
-  const {game, players, gameStage, missions, currentRound, currentMission, missionParams} = currentGames[game_id]
-  const gameData = {currentGame: {game, players, gameStage, missions, currentRound, currentMission}, missionParams}
-  res.json(gameData)
+  if (currentGames[game_id]) {  
+  res.json({currentGame: currentGames[game_id]})
   }
   else res.status(400).send({message: 'invalid game id'})
 })
@@ -117,9 +115,7 @@ router.post('/nominate', token.decode,(req, res) => {
     db.getNominations(round_id).then(nominations => {
       console.log('nomination recieved')
         currentGames[game_id].missions[mission_num-1].rounds[round_num-1].nominations = nominations
-        const {game, players, gameStage, missions, currentRound, currentMission, missionParams} = currentGames[game_id]
-        const gameData = {currentGame: {game, players, gameStage, missions, currentRound, currentMission}, missionParams}
-        res.json(gameData)
+        res.json({currentGame: currentGames[game_id]})
     })
   })
 })
@@ -135,9 +131,7 @@ router.post('/remove', token.decode,(req, res) => {
     db.getNominations(round_id).then(nominations => {
       console.log('nomination removed')
         currentGames[game_id].missions[mission_num-1].rounds[round_num-1].nominations = nominations
-        const {game, players, gameStage, missions, currentRound, currentMission, missionParams} = currentGames[game_id]
-        const gameData = {currentGame: {game, players, gameStage, missions, currentRound, currentMission}, missionParams}
-        res.json(gameData)
+        res.json({currentGame: currentGames[game_id]})
     })
   })   
 })
@@ -147,9 +141,7 @@ router.post('/confirmNoms', token.decode,(req, res) => {
   if (currentGames[game_id].gameStage !== 'nominating') return res.sendStatus(400)  
   const round_id = currentGames[game_id].currentRound.id
   checkNominations(game_id, round_id).then(() => {
-    const {game, players, gameStage, missions, currentRound, currentMission, missionParams} = currentGames[game_id]
-    const gameData = {currentGame: {game, players, gameStage, missions, currentRound, currentMission}, missionParams}
-    res.json(gameData)
+    res.json({currentGame: currentGames[game_id]})
   })
 })
 
@@ -162,9 +154,7 @@ router.post('/vote', token.decode,(req, res) => {
   db.castVote(round_id, user_id, vote).then(() => {
     console.log('vote recieved')
     checkVotes(game_id, round_id).then(() => {
-      const {game, players, gameStage, missions, currentRound, currentMission, missionParams} = currentGames[game_id]
-      const gameData = {currentGame: {game, players, gameStage, missions, currentRound, currentMission}, missionParams}
-      res.json(gameData)
+      res.json({currentGame: currentGames[game_id]})
     })
 
   })
@@ -179,9 +169,7 @@ router.post('/intention', token.decode,(req, res) => {
   db.castIntention(mission_id, user_id, intention).then(() => {
     console.log('intention recieved')
     checkIntentions(game_id, mission_id).then(() => {
-      const {game, players, gameStage, missions, currentRound, currentMission, missionParams} = currentGames[game_id]
-      const gameData = {currentGame: {game, players, gameStage, missions, currentRound, currentMission}, missionParams}
-      res.json(gameData)
+      res.json({currentGame: currentGames[game_id]})
     })
 
   })
