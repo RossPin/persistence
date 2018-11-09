@@ -9,7 +9,8 @@ function getAutoPlayers(game) {
 function checkAutoPlayers(game_id, callback) {
   const game = currentGames[game_id]
   getAutoPlayers(game).map(autoPlayer => {
-    if (nominateRequired(game, autoPlayer)) makeNomination(game, autoPlayer, callback)  
+    if (nominateRequired(game, autoPlayer)) makeNomination(game, autoPlayer, callback)
+    else if (voteRequired(game, autoPlayer)) makeVote(game, game_id, autoPlayer, callback)
   })
 }
 
@@ -47,3 +48,18 @@ function selectNominee(game, nominations) {
   return (unNominated[Math.floor(Math.random()*unNominated.length)].id)
 }
 
+function voteRequired(game, autoPlayer) {
+  return (game.gameStage === 'voting' && autoPlayer.voted < game.currentRound.round_num)
+}
+
+function makeVote(game, game_id, autoPlayer, callback){
+  const {id: round_id, round_num} = game.currentRound
+  autoPlayer.voted = round_num
+  const vote = Math.random() < 0.5 + round_num*.1
+  db.castVote(round_id, autoPlayer.id, vote).then(() => {
+    console.log('vote recieved')
+    checkVotes(game_id, round_id).then(() => {
+      callback(game)
+    })
+  })
+}
