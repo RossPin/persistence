@@ -1,5 +1,5 @@
 const {currentGames} = require('./currentGames')
-const db = require('../db/game')
+const db = require('./db/game')
 const {checkVotes, checkIntentions, checkNominations} = require('../gameFunctions')
 
 function getAutoPlayers(game) {
