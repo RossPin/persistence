@@ -1,5 +1,6 @@
 const db = require('./db/game')
 const {currentGames} = require('./currentGames')
+const autoplay = require('./autoplay')
 
 module.exports = http => {
     var io = require('socket.io')(http)
@@ -42,6 +43,9 @@ module.exports = http => {
 
         socket.on('updateGameRoom', (gameData, gameId) => {
             io.to(gameId).emit('receiveUpdateGame', gameData)
+            autoplay(gameId, game => {
+              io.to(gameId).emit('receiveUpdateGame', game)
+            })
             if (gameData.currentGame.game.is_finished) delete currentGames[gameId]
         })
 
