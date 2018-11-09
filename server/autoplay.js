@@ -1,6 +1,6 @@
 const {currentGames} = require('./currentGames')
 const db = require('./db/game')
-const {checkVotes, checkIntentions, checkNominations} = require('../gameFunctions')
+const {checkVotes, checkIntentions, checkNominations} = require('./gameFunctions')
 
 function getAutoPlayers(game) {
   return game.players.filter(player => player.id <= 10)
