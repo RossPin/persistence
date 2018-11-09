@@ -36,8 +36,7 @@ class Game extends React.Component {
     localSocket.on('receiveUpdateGame', (gameData) => {
       if (this.mounted) {
         const { dispatch } = this.props
-        clearTimeout(this.timeout)
-        delete gameData.currentGame.missionParams
+        clearTimeout(this.timeout)        
         dispatch(updateCurrentGame(gameData.currentGame))
         this.timeout = setTimeout(() => {
           if (this.mounted && !this.state.gameOver) this.getData()
