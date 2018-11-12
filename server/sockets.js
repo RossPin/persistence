@@ -43,9 +43,7 @@ module.exports = http => {
 
         socket.on('updateGameRoom', (gameData, gameId) => {
             io.to(gameId).emit('receiveUpdateGame', gameData)
-            autoplay(gameId, game => {
-              io.to(gameId).emit('updateGameRoom', game, gameId)
-            })
+            handleAutoPlay(gameId)
             if (gameData.currentGame.game.is_finished) delete currentGames[gameId]
         })
 
@@ -59,6 +57,14 @@ module.exports = http => {
             const games = keys.map(key => currentGames[key].game)
             io.emit('receiveGames', games)
         })
+
+        function handleAutoPlay(gameId) {
+          autoplay(gameId, game => {
+            io.to(gameId).emit('receiveUpdateGame', game)
+            handleAutoPlay(gameId)
+            if (gameData.currentGame.game.is_finished) delete currentGames[gameId]
+          })
+        }
 
     });
 
