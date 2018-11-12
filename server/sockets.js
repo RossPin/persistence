@@ -59,8 +59,8 @@ module.exports = http => {
         })
 
         function handleAutoPlay(gameId) {
-          autoplay(gameId, game => {
-            io.to(gameId).emit('receiveUpdateGame', game)
+          autoplay(gameId, gameData => {
+            io.to(gameId).emit('receiveUpdateGame', gameData)
             handleAutoPlay(gameId)
             if (gameData.currentGame.game.is_finished) delete currentGames[gameId]
           })
