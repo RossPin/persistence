@@ -8,10 +8,20 @@ function getAutoPlayers(game) {
 
 function checkAutoPlayers(game_id, callback) {
   const game = currentGames[game_id]
-  getAutoPlayers(game).map(autoPlayer => {
-    if (nominateRequired(game, autoPlayer)) makeNomination(game, game_id, autoPlayer, callback)
-    else if (voteRequired(game, autoPlayer)) makeVote(game, game_id, autoPlayer, callback)
-    else if (intentionRequired(game, autoPlayer)) makeIntention(game, game_id, autoPlayer, callback)
+  getAutoPlayers(game).some(autoPlayer => {
+    if (nominateRequired(game, autoPlayer)) {
+      makeNomination(game, game_id, autoPlayer, callback)
+      return true
+    }
+    else if (voteRequired(game, autoPlayer)) {
+      makeVote(game, game_id, autoPlayer, callback)
+      return true
+    }
+    else if (intentionRequired(game, autoPlayer)) {
+      makeIntention(game, game_id, autoPlayer, callback)
+      return true
+    }
+    else return false
   })
 }
 
@@ -24,18 +34,21 @@ function makeNomination(game, game_id, autoPlayer, callback) {
     const {mission_num} = game.currentMission
     const numNominations = game.missionParams[mission_num - 1].team_total
     const nominations = game.missions[mission_num-1].rounds[round_num-1].nominations
-    let nominee = isNominated(autoPlayer, nominations) ? selectNominee(game, nominations) : autoPlayer.id
-    db.castNomination(round_id, nominee).then(() => {
-      db.getNominations(round_id).then(updatedNominations => {
-        console.log('nomination recieved')
+    if (nominations.length < numNominations) {
+      let nominee = isNominated(autoPlayer, nominations) ? selectNominee(game, nominations) : autoPlayer.id
+      db.castNomination(round_id, nominee).then(() => {
+        db.getNominations(round_id).then(updatedNominations => {
+          console.log('nomination recieved: ' + autoPlayer.display_name)
           game.missions[mission_num-1].rounds[round_num-1].nominations = updatedNominations
           callback({currentGame: game})
-          if (updatedNominations.length < numNominations) makeNomination(game, game_id, autoPlayer, callback)
-          else checkNominations(game_id, round_id).then(() => {
-            callback({currentGame: game})
-          })
+        })
       })
-    })   
+    }
+    else {
+      checkNominations(game_id, round_id).then(() => {
+        callback({currentGame: game})
+      })
+    }  
 }
 
 function isNominated(player, nominations) {
@@ -56,7 +69,7 @@ function makeVote(game, game_id, autoPlayer, callback){
   autoPlayer.voted = round_id
   const vote = Math.random() < 0.5 + round_num/10
   db.castVote(round_id, autoPlayer.id, vote).then(() => {
-    console.log('vote recieved')
+    console.log('vote recieved: ' + autoPlayer.display_name)
     checkVotes(game_id, round_id).then(() => {
       callback({currentGame: game})
     })
@@ -78,7 +91,7 @@ function makeIntention(game, game_id, autoPlayer, callback) {
     intention = Math.random() > 0.3 + mission_num/5
   }
   db.castIntention(mission_id, autoPlayer.id, intention).then(() => {
-    console.log('intention recieved')
+    console.log('intention recieved: ' + autoPlayer.display_name)
     checkIntentions(game_id, mission_id).then(() => {
       callback({currentGame: game})
     })
