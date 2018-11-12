@@ -38,7 +38,7 @@ class Votes extends React.Component{
                 </div>
               </section>
               <footer className="modal-card-foot modal-color">
-                <button className="button is-fullwidth is-dark" onClick={this.props.hideModal}>Hide</button>
+                <button className="button is-fullwidth is-dark" onClick={() => this.props.hideModal('votes')}>Hide</button>
               </footer>
             </div>
           </div>

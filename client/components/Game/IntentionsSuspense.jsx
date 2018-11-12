@@ -96,7 +96,7 @@ class IntentionsSuspense extends React.Component {
 
         <footer className="modal-card-foot  modal-color">
           {!hasStarted && <button className="button is-dark is-fullwidth" onClick={this.start}>Reveal!</button>}
-          {hasEnded && <button onClick={this.props.hideModal} className="button is-dark is-fullwidth">Close</button>}
+          {hasEnded && <button onClick={() => this.props.hideModal('intentions')} className="button is-dark is-fullwidth">Close</button>}
         </footer>
       </div>
     </div>

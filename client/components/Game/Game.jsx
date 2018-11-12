@@ -100,25 +100,26 @@ class Game extends React.Component {
       return a;
   }
 
-  hideModal() {
-    this.setState({ showVotes: false, showIntentions: false})
+  hideModal(modal) {
+    let {showVotes, showIntentions, gameOver} = this.state
+    if (modal === 'votes') showVotes = false
+    else if (modal === 'intentions') showIntentions = false
+    else if (modal === 'gameOver') {
+      clearTimeout(this.timeout)
+      gameOver = false
+    }
+    this.setState({ showVotes, showIntentions, gameOver})
   }
-
-  hideGameOver() {
-    clearTimeout(this.timeout)
-    this.setState({ gameOver: false })
-  }
-
 
   render() {
     return (
       <div className="container">
           <StatusBar leader={(this.props.currentGame.currentRound.leader_id == this.props.auth.user.id)} />
             <Buttons />
-            <GameBoard />
-            {this.state.showVotes && <Votes hideModal={this.hideModal.bind(this)} round={this.state.round} />}
-            {this.state.gameOver && <GameOver hideModal={this.hideGameOver.bind(this)} />}
-            {this.state.showIntentions && <IntentionsSuspense hideModal={this.hideModal.bind(this)} mission={this.state.mission} />}            
+            <GameBoard />            
+            {this.state.gameOver && <GameOver hideModal={this.hideModal.bind(this)} />}
+            {this.state.showIntentions && <IntentionsSuspense hideModal={this.hideModal.bind(this)} mission={this.state.mission} />}
+            {this.state.showVotes && <Votes hideModal={this.hideModal.bind(this)} round={this.state.round} />}           
             <div style={{marginTop: '1vw'}} className="ChatContainer">
             <ChatWindow id={this.props.match.params.id} />
         </div>
