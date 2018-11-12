@@ -88,7 +88,7 @@ function makeIntention(game, game_id, autoPlayer, callback) {
   const {id: mission_id, mission_num} = game.currentMission
   autoPlayer.intention = mission_id
   if (autoPlayer.role === 'spy') {    
-    intention = Math.random() > (0.2 + mission_num/5)
+    intention = Math.random() > (0.2 + mission_num/5)/numSpiesOnMission(game)
   }
   db.castIntention(mission_id, autoPlayer.id, intention).then(() => {
     console.log('intention recieved: ' + autoPlayer.display_name)
@@ -96,6 +96,14 @@ function makeIntention(game, game_id, autoPlayer, callback) {
       callback({currentGame: game})
     })
   })
+}
+
+function numSpiesOnMission(game){
+  const {round_num} = game.currentRound 
+  const {mission_num} = game.currentMission 
+  const nominations = game.missions[mission_num-1].rounds[round_num-1].nominations
+  const spies = nominations.filter(nomination => game.players.find(player => player.id === nomination.user_id).role === 'spy')
+  return spies.length
 }
 
 module.exports = checkAutoPlayers
