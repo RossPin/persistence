@@ -87,8 +87,10 @@ function makeIntention(game, game_id, autoPlayer, callback) {
   let intention = true
   const {id: mission_id, mission_num} = game.currentMission
   autoPlayer.intention = mission_id
-  if (autoPlayer.role === 'spy') {    
-    intention = Math.random() > (0.2 + (mission_num )/5)/mission_num === 5 ? 1 : numSpiesOnMission(game)
+  if (autoPlayer.role === 'spy') {
+    const failFactor = (0.2 + (mission_num)/5)/(spyCanWin(game) ? 1 : numSpiesOnMission(game)) // probability of playing fail reduced by number of other spies on mission unless game can be won this mission 
+    intention = Math.random() > failFactor
+    console.log(failFactor, spyCanWin(game), numSpiesOnMission(game))
   }
   db.castIntention(mission_id, autoPlayer.id, intention).then(() => {
     console.log('intention recieved: ' + autoPlayer.display_name)
@@ -96,6 +98,10 @@ function makeIntention(game, game_id, autoPlayer, callback) {
       callback({currentGame: game})
     })
   })
+}
+
+function spyCanWin(game){
+  return game.missions.filter(mission => mission.outcome === false).length >= 2
 }
 
 function numSpiesOnMission(game){
