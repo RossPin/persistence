@@ -67,7 +67,7 @@ function voteRequired(game, autoPlayer) {
 function makeVote(game, game_id, autoPlayer, callback){
   const {id: round_id, round_num} = game.currentRound
   autoPlayer.voted = round_id
-  const vote = Math.random() < 0.5 + round_num/10
+  const vote = Math.random() < (0.4 + round_num/10)
   db.castVote(round_id, autoPlayer.id, vote).then(() => {
     console.log('vote recieved: ' + autoPlayer.display_name)
     checkVotes(game_id, round_id).then(() => {
@@ -87,8 +87,8 @@ function makeIntention(game, game_id, autoPlayer, callback) {
   let intention = true
   const {id: mission_id, mission_num} = game.currentMission
   autoPlayer.intention = mission_id
-  if (autoPlayer.spy) {
-    intention = Math.random() > 0.3 + mission_num/5
+  if (autoPlayer.role === 'spy') {    
+    intention = Math.random() > (0.2 + mission_num/5)
   }
   db.castIntention(mission_id, autoPlayer.id, intention).then(() => {
     console.log('intention recieved: ' + autoPlayer.display_name)
