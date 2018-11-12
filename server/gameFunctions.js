@@ -9,8 +9,9 @@ function assignRoles(roles){
     assignRandomSpy(roles)
   }
   roles.forEach(role => {
-  if (!role.role) role.role = 'good'  
-  })  
+    if (!role.role) role.role = 'good'  
+  })
+  console.log('roles are', roles) 
 }
 
 function howManySpies(num){  
@@ -30,10 +31,8 @@ function howManySpies(num){
 }
 
 function assignRandomSpy(roles){
-  let idx = Math.floor(Math.random()*roles.length)  
-  console.log('roles are', roles)
-  if (roles[idx].role == 'spy') {
-    console.log(`Role at index ${idx} is a spy, trying again`, roles[idx])
+  let idx = Math.floor(Math.random()*roles.length)
+  if (roles[idx].role == 'spy') {    
     assignRandomSpy(roles)
   }
   else roles[idx].role = 'spy'
