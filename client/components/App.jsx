@@ -15,8 +15,7 @@ import HistoryIcon from './Game/HistoryIcon'
 
 
 const App = () => (
-  <Router>
-    <div className="container is-fluid">
+  <Router>    
       <div className="backdrop-image">
         <div className='app-container has-text-centered'>
           <Route path="/" component={Nav} />
@@ -28,7 +27,6 @@ const App = () => (
           <Route exact path="/waiting/:id" component={Waiting} />
         </div>
       </div>
-    </div>
   </Router>
 )
 
