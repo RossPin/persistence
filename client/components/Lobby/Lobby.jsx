@@ -16,6 +16,7 @@ class Lobby extends React.Component {
     this.state = {
       games: []
     }
+    this.clickJoinGame = this.clickJoinGame.bind(this)
   }
 
   componentDidMount() {
@@ -34,13 +35,13 @@ class Lobby extends React.Component {
     this.mounted = false
   }
 
-  clickJoinGame(game, user) {
+  clickJoinGame(game, user) {    
     joinGame({game, user})
       .then(res => {
-        const gameData = res.body
-        const game_id = game.id
+        const gameData = res.body        
         const localSocket = this.props.socket
-        localSocket.emit('updateWaitingRoom', gameData, game_id)
+        localSocket.emit('updateWaitingRoom', gameData, game.id)
+        this.props.history.push(`/waiting/${game.id}`)
       })
   }
 
@@ -51,7 +52,7 @@ class Lobby extends React.Component {
     return (
       <div>
         <h1 className="is-size-1 has-text-white">Welcome to the lobby</h1>
-        <NewGameForm />
+        <NewGameForm joinGame={this.clickJoinGame}/>
         <br />
         <p className="is-size-4 has-text-white">Join a game</p>
         <br />
@@ -59,7 +60,7 @@ class Lobby extends React.Component {
           {games.map((game, i) => {
             if (!game.in_progress || game.playerIds.includes(user.id)) return (
               <div key={i} className="column is-4">
-                <Link onClick={() => this.clickJoinGame(game, user)} className={buttonStyling} to={`/waiting/${game.id}`}>{game.game_name}</Link>
+                <button onClick={() => this.clickJoinGame(game, user)} className={buttonStyling}>{game.game_name}</button>
               </div>
               )
             })}
