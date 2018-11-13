@@ -62,8 +62,7 @@ class Game extends React.Component {
   getData(){
     const gameId = this.props.match.params.id
     clearTimeout(this.timeout)
-    this.props.dispatch(getGameState(gameId)).then(() => {
-      console.log('data update on timeout')      
+    this.props.dispatch(getGameState(gameId)).then(() => {            
       this.timeout = setTimeout(() => {
         if (this.mounted && !this.state.gameOver) this.getData()
       },30000)
