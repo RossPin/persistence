@@ -1,6 +1,11 @@
 @import './my_bulma.scss';
 @import '~react-tippy/dist/tippy.css';
 
+html, body {
+  padding: 0;
+  margin: 0;
+}
+
 
 .The-Persistence {
   background-image: url('/persistencetitle.jpg');
@@ -34,6 +39,7 @@
   background-size: cover;
   min-height: 100vh;
   width: 100vw;
+  margin-top: -0.5vw;
 }
 
 .RoundContainer {
