@@ -13,8 +13,7 @@ exports.seed = function(knex, Promise) {
         {id: 6, user_name: 'auto6', 'display_name': 'Meg', img: '/Meg.jpg', hash: 'xxx'},
         {id: 7, user_name: 'auto7', 'display_name': 'Kenny', img: '/Kenny.png', hash: 'xxx'},
         {id: 8, user_name: 'auto8', 'display_name': 'Summer', img: '/Summer.png', hash: 'xxx'},
-        {id: 9, user_name: 'auto9', 'display_name': 'Cartman', img: '/Cartman.png', hash: 'xxx'},
-        {id: 10, user_name: 'guest', 'display_name': 'Guest', img: '/Guest.png', hash: '$2a$12$R1vHDuSaO1GhpT4CYZrfi.cXE2qKkvYWGUvdGq0PZUJEHpX1mk7RK'}        
-      ]);
+        {id: 9, user_name: 'auto9', 'display_name': 'Cartman', img: '/Cartman.png', hash: 'xxx'}       
+      ], 'id');
     });
 };
