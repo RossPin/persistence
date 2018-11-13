@@ -1,12 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import NewGameForm from './NewGameForm'
-import { Link } from 'react-router-dom'
-import ChatWindow from '../Game/ChatWindow'
 import { joinGame } from '../../actions/playerInputs'
 import {resetCurrentGame} from '../../actions/currentGame'
-
-
 
 const buttonStyling = "button is-medium is-fullwidth is-white is-outlined"
 
@@ -16,7 +12,7 @@ class Lobby extends React.Component {
     this.state = {
       games: []
     }
-    this.clickJoinGame = this.clickJoinGame.bind(this)
+    this.handleJoinGame = this.handleJoinGame.bind(this)
   }
 
   componentDidMount() {
@@ -35,7 +31,7 @@ class Lobby extends React.Component {
     this.mounted = false
   }
 
-  clickJoinGame(game, user) {    
+  handleJoinGame(game, user) {    
     joinGame({game, user})
       .then(res => {
         const gameData = res.body        
@@ -52,7 +48,7 @@ class Lobby extends React.Component {
     return (
       <div>
         <h1 className="is-size-1 has-text-white">Welcome to the lobby</h1>
-        <NewGameForm joinGame={this.clickJoinGame}/>
+        <NewGameForm joinGame={this.handleJoinGame}/>
         <br />
         <p className="is-size-4 has-text-white">Join a game</p>
         <br />
@@ -60,12 +56,11 @@ class Lobby extends React.Component {
           {games.map((game, i) => {
             if (!game.in_progress || game.playerIds.includes(user.id)) return (
               <div key={i} className="column is-4">
-                <button onClick={() => this.clickJoinGame(game, user)} className={buttonStyling}>{game.game_name}</button>
+                <button onClick={() => this.handleJoinGame(game, user)} className={buttonStyling}>{game.game_name}</button>
               </div>
               )
             })}
         </div>
-
       </div>
     )
   }
