@@ -30,9 +30,9 @@ class Game extends React.Component {
   componentDidMount() {
     this.mounted = true
     const gameId = this.props.match.params.id
-    let user_name = this.props.auth.user.user_name
+    let {display_name, user_name} = this.props.auth.user
     let localSocket = this.props.socket
-    localSocket.emit('joinGame', gameId, user_name)
+    localSocket.emit('joinGame', gameId, display_name || user_name)
     localSocket.on('receiveUpdateGame', (gameData) => {
       if (this.mounted) {
         const { dispatch } = this.props

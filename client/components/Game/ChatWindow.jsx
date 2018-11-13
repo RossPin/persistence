@@ -21,7 +21,7 @@ class ChatWindow extends React.Component {
       this.state.localSocket.on('chat-up', (msg) => {
           if(this.mounted) this.addMsgToChat(msg);
       })
-      this.state.localSocket.on('joinGame', (id, user_name) => {
+      this.state.localSocket.on('joinedGame', (id, user_name) => {
           const msg = {
               userName: user_name,
               date: new Date(),

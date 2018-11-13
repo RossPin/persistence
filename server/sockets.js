@@ -26,7 +26,7 @@ module.exports = http => {
         socket.on('joinGame', (id, user_name) => {
             socket.join(id) //socket joins existing Game
             console.log("you have joined room" + id)
-            io.to(id).emit('joinGame', id, user_name)
+            io.to(id).emit('joinedGame', id, user_name)
             //tell client about the joined Game
         })
         // tis is copied form socket-voting
