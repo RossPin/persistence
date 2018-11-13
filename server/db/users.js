@@ -21,9 +21,6 @@ function userExists (user_name) {
     .then(user => !!user)
 }
 
-return db.insert([{round_id, user_id}], 'user_id')
-  .into('nominations')
-
 function getUserByName (user_name) {
   return db('users')
     .where('user_name', user_name.toLowerCase())
