@@ -1,6 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {loginUser} from '../../actions/login'
+import { registerUserRequest } from '../../actions/register';
 
 class Login extends React.Component {
   constructor(props) {
@@ -23,8 +24,14 @@ class Login extends React.Component {
   }
 
   guestLogin() {
-    this.props.dispatch(loginUser({user_name: 'guest', password: 'GuestLoginPassword'}))
+    this.props.dispatch(registerUserRequest({
+      user_name: 'guest'+Date.now(),
+      display_name: 'Guest',
+      img: '/Guest.png',
+      password: 'GuestLoginPassword'
+    }))
   }
+  
   render() {
     return (
       <form className="Login container" onSubmit={this.submit}>
