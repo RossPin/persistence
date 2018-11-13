@@ -50,7 +50,7 @@ class ChatWindow extends React.Component {
     submit(e){
         e.preventDefault();
         if (this.state.chatMessage) {
-        const userName = this.props.auth.user.user_name
+        const userName = this.props.auth.user.display_name
         const newMsg = {
             userName,
             chatMessage: this.state.chatMessage,
