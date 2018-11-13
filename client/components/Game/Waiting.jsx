@@ -45,7 +45,7 @@ class Waiting extends React.Component {
         <div className='is-size-3 statusBar' >
           <p className="has-text-white">Waiting for Players</p>
         </div>
-        {(host_id == this.props.auth.user.id && players.length > 1) && <ReadyButton />}
+        {(host_id == this.props.auth.user.id && players.length > 4) ? <ReadyButton /> : <span className="has-text-white">Min 5 players needed to begin game</span>}
         {(host_id == this.props.auth.user.id && players.length < 10) && <AutoPlay />}
         <div className="level">
           {players.map((player, i) => {
