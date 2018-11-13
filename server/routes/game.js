@@ -61,7 +61,7 @@ router.post('/addauto', token.decode,(req, res) => {
   const game_id = req.body.game.id
   if (currentGames[game_id].gameStage !== 'waiting') return res.sendStatus(400)
   if (currentGames[game_id].players.length >= 10) return res.sendStatus(400)  
-  const user_id = currentGames[game_id].players.filter(x => x.id <= 10).length + 1
+  const user_id = currentGames[game_id].players.filter(x => x.id < 10).length + 1
   db.getPlayers(game_id).then(playersList => {
     db.roleEntry(game_id, user_id).then(() => {
       db.getPlayers(game_id).then(playersList => {
