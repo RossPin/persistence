@@ -71,7 +71,7 @@ class IntentionsSuspense extends React.Component {
             The Team:
           </h2>
           <div className="columns is-multiline  modal-color">
-            {team.map((player, i) => <div key={i} className="has-text-white column is-4">{player.user_name}<img style={roundStyleObj} src={player.img} onError={e => profileImgError(e)}/></div>)}
+            {team.map((player, i) => <div key={i} className="has-text-white column is-4">{player.display_name || player.user_name}<img style={roundStyleObj} src={player.img} onError={e => profileImgError(e)}/></div>)}
           </div>
           <hr />
           <div className="has-text-centered columns  modal-color is-multiline">
@@ -96,7 +96,7 @@ class IntentionsSuspense extends React.Component {
 
         <footer className="modal-card-foot  modal-color">
           {!hasStarted && <button className="button is-dark is-fullwidth" onClick={this.start}>Reveal!</button>}
-          {hasEnded && <button onClick={this.props.hideModal} className="button is-dark is-fullwidth">Close</button>}
+          {hasEnded && <button onClick={() => this.props.hideModal('intentions')} className="button is-dark is-fullwidth">Close</button>}
         </footer>
       </div>
     </div>

@@ -1,6 +1,11 @@
 @import './my_bulma.scss';
 @import '~react-tippy/dist/tippy.css';
 
+html, body {
+  padding: 0;
+  margin: 0;
+}
+
 
 .The-Persistence {
   background-image: url('/persistencetitle.jpg');
@@ -18,6 +23,11 @@
 .navbar-menu {
   color: rgb(0, 255, 200)
 }
+
+.navImage {
+  width: 64px;
+  height: 64px;
+}
 // gameboard image
 
 .mission-board {
@@ -32,17 +42,9 @@
   background-image: url('/Backdrop.jpg');
   background-repeat: no-repeat center center fixed;
   background-size: cover;
-  min-height: 100%;
-  min-width: 1024px;
-
-  /* Set up proportionate scaling */
-  width: 100%;
-  height: auto;
-
-  /* Set up positioning */
-  position: fixed;
-  top: 0;
-  left: 0;
+  min-height: 100vh;
+  width: 100vw;
+  margin-top: -0.5vw;
 }
 
 .RoundContainer {

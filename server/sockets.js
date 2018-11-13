@@ -1,5 +1,6 @@
 const db = require('./db/game')
 const {currentGames} = require('./currentGames')
+const autoplay = require('./autoplay')
 
 module.exports = http => {
     var io = require('socket.io')(http)
@@ -25,7 +26,7 @@ module.exports = http => {
         socket.on('joinGame', (id, user_name) => {
             socket.join(id) //socket joins existing Game
             console.log("you have joined room" + id)
-            io.to(id).emit('joinGame', id, user_name)
+            io.to(id).emit('joinedGame', id, user_name)
             //tell client about the joined Game
         })
         // tis is copied form socket-voting
@@ -42,6 +43,7 @@ module.exports = http => {
 
         socket.on('updateGameRoom', (gameData, gameId) => {
             io.to(gameId).emit('receiveUpdateGame', gameData)
+            handleAutoPlay(gameId)
             if (gameData.currentGame.game.is_finished) delete currentGames[gameId]
         })
 
@@ -55,6 +57,14 @@ module.exports = http => {
             const games = keys.map(key => currentGames[key].game)
             io.emit('receiveGames', games)
         })
+
+        function handleAutoPlay(gameId) {
+          autoplay(gameId, gameData => {
+            io.to(gameId).emit('receiveUpdateGame', gameData)
+            handleAutoPlay(gameId)
+            if (gameData.currentGame.game.is_finished) delete currentGames[gameId]
+          })
+        }
 
     });
 

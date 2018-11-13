@@ -30,13 +30,13 @@ class Game extends React.Component {
   componentDidMount() {
     this.mounted = true
     const gameId = this.props.match.params.id
-    let user_name = this.props.auth.user.user_name
+    let {display_name, user_name} = this.props.auth.user
     let localSocket = this.props.socket
-    localSocket.emit('joinGame', gameId, user_name)
+    localSocket.emit('joinGame', gameId, display_name || user_name)
     localSocket.on('receiveUpdateGame', (gameData) => {
       if (this.mounted) {
         const { dispatch } = this.props
-        clearTimeout(this.timeout)
+        clearTimeout(this.timeout)        
         dispatch(updateCurrentGame(gameData.currentGame))
         this.timeout = setTimeout(() => {
           if (this.mounted && !this.state.gameOver) this.getData()
@@ -62,8 +62,7 @@ class Game extends React.Component {
   getData(){
     const gameId = this.props.match.params.id
     clearTimeout(this.timeout)
-    this.props.dispatch(getGameState(gameId)).then(() => {
-      console.log('data update on timeout')      
+    this.props.dispatch(getGameState(gameId)).then(() => {            
       this.timeout = setTimeout(() => {
         if (this.mounted && !this.state.gameOver) this.getData()
       },30000)
@@ -100,25 +99,26 @@ class Game extends React.Component {
       return a;
   }
 
-  hideModal() {
-    this.setState({ showVotes: false, showIntentions: false})
+  hideModal(modal) {
+    let {showVotes, showIntentions, gameOver} = this.state
+    if (modal === 'votes') showVotes = false
+    else if (modal === 'intentions') showIntentions = false
+    else if (modal === 'gameOver') {
+      clearTimeout(this.timeout)
+      gameOver = false
+    }
+    this.setState({ showVotes, showIntentions, gameOver})
   }
-
-  hideGameOver() {
-    clearTimeout(this.timeout)
-    this.setState({ gameOver: false })
-  }
-
 
   render() {
     return (
       <div className="container">
           <StatusBar leader={(this.props.currentGame.currentRound.leader_id == this.props.auth.user.id)} />
             <Buttons />
-            <GameBoard />
-            {this.state.showVotes && <Votes hideModal={this.hideModal.bind(this)} round={this.state.round} />}
-            {this.state.gameOver && <GameOver hideModal={this.hideGameOver.bind(this)} />}
-            {this.state.showIntentions && <IntentionsSuspense hideModal={this.hideModal.bind(this)} mission={this.state.mission} />}            
+            <GameBoard />            
+            {this.state.gameOver && <GameOver hideModal={this.hideModal.bind(this)} />}
+            {this.state.showIntentions && <IntentionsSuspense hideModal={this.hideModal.bind(this)} mission={this.state.mission} />}
+            {this.state.showVotes && <Votes hideModal={this.hideModal.bind(this)} round={this.state.round} />}           
             <div style={{marginTop: '1vw'}} className="ChatContainer">
             <ChatWindow id={this.props.match.params.id} />
         </div>

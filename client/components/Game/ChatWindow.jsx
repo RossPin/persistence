@@ -21,7 +21,7 @@ class ChatWindow extends React.Component {
       this.state.localSocket.on('chat-up', (msg) => {
           if(this.mounted) this.addMsgToChat(msg);
       })
-      this.state.localSocket.on('joinGame', (id, user_name) => {
+      this.state.localSocket.on('joinedGame', (id, user_name) => {
           const msg = {
               userName: user_name,
               date: new Date(),
@@ -50,7 +50,7 @@ class ChatWindow extends React.Component {
     submit(e){
         e.preventDefault();
         if (this.state.chatMessage) {
-        const userName = this.props.auth.user.user_name
+        const userName = this.props.auth.user.display_name
         const newMsg = {
             userName,
             chatMessage: this.state.chatMessage,

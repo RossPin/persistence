@@ -3,7 +3,8 @@ import { connect } from 'react-redux'
 import EmptyPlayer from './EmptyPlayer'
 import ReadyButton from './ReadyButton'
 import ChatWindow from './ChatWindow'
-import {updateCurrentGame, updateMissionParams} from '../../actions/currentGame'
+import {updateCurrentGame, updateMissionParams, getGameState} from '../../actions/currentGame'
+import AutoPlay from './AutoPlay'
 
 class Waiting extends React.Component {
   constructor(props) {
@@ -22,14 +23,15 @@ class Waiting extends React.Component {
 
   componentDidMount() {
     const gameId = this.props.match.params.id
-    let user_name = this.props.auth.user.user_name
+    let {display_name, user_name} = this.props.auth.user
     let localSocket = this.props.socket
-    localSocket.emit('joinGame', gameId, user_name)
+    localSocket.emit('joinGame', gameId, display_name || user_name)
     localSocket.on('receiveUpdateWaiting', (gameData) => {
       const {dispatch} = this.props      
       dispatch(updateMissionParams(gameData.missionParams))
       dispatch(updateCurrentGame(gameData.currentGame))
     })
+    this.props.dispatch(getGameState(gameId)).then(() => {})
   }
 
   render() {    
@@ -43,7 +45,8 @@ class Waiting extends React.Component {
         <div className='is-size-3 statusBar' >
           <p className="has-text-white">Waiting for Players</p>
         </div>
-        {(host_id == this.props.auth.user.id && players.length > 1) && <ReadyButton />}
+        {(host_id == this.props.auth.user.id && players.length > 4) ? <ReadyButton /> : <span className="has-text-white">Min 5 players needed to begin game</span>}
+        {(host_id == this.props.auth.user.id && players.length < 10) && <AutoPlay />}
         <div className="level">
           {players.map((player, i) => {
             return (
