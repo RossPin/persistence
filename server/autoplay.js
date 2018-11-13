@@ -3,7 +3,7 @@ const db = require('./db/game')
 const {checkVotes, checkIntentions, checkNominations} = require('./gameFunctions')
 
 function getAutoPlayers(game) {
-  return game.players.filter(player => player.id <= 10)
+  return game.players.filter(player => player.id < 10)
 }
 
 function checkAutoPlayers(game_id, callback) {
