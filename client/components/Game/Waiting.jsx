@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import EmptyPlayer from './EmptyPlayer'
 import ReadyButton from './ReadyButton'
 import ChatWindow from './ChatWindow'
-import {updateCurrentGame, updateMissionParams} from '../../actions/currentGame'
+import {updateCurrentGame, updateMissionParams, getGameState} from '../../actions/currentGame'
 import AutoPlay from './AutoPlay'
 
 class Waiting extends React.Component {
@@ -31,6 +31,7 @@ class Waiting extends React.Component {
       dispatch(updateMissionParams(gameData.missionParams))
       dispatch(updateCurrentGame(gameData.currentGame))
     })
+    this.props.dispatch(getGameState(gameId)).then(() => {})
   }
 
   render() {    
