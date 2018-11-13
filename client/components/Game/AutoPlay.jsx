@@ -24,7 +24,7 @@ class AutoPlay extends React.Component {
             })
     }
     render() {
-        return <button onClick={this.addAuto} style={{marginBottom: '0.5vw'}} className={`button is-medium is-white is-outlined ${this.state.isLoading ? 'is-loading' : ''}`}>Add Auto</button>
+        return <button onClick={this.addAuto} style={{marginBottom: '0.5vw'}} className={`button is-medium is-white is-outlined ${this.state.isLoading ? 'is-loading' : ''}`}>Add Auto Player</button>
     }
 }
 
