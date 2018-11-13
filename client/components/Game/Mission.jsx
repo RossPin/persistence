@@ -8,8 +8,9 @@ const Mission = props => {
   const textStyle = 'is-uppercase is-size-5'
   const { id, outcome } = props.mission
   const missionNumber = props.number
+  const currentMissionNumber = props.currentGame.currentMission.mission_num
   const glow = (props.currentGame.currentMission.mission_num == missionNumber + 1) ? 'cake' : ''
-  const iconDrop = props.currentGame.currentMission.mission_num > missionNumber + 1 || props.currentGame.gameStage == 'goodWin' || props.currentGame.gameStage == 'spyWin'
+  const iconDrop = currentMissionNumber > missionNumber + 1 || (props.currentGame.game.is_finished && currentMissionNumber === missionNumber + 1)
   return (
     <Tooltip
       // options
