@@ -8,7 +8,7 @@ import profileImgError from '../utils/profileImgError'
 function Nav(props) {
   const buttonStyle = 'button is-medium is-link is-inverted is-outlined homeButton'
   return (
-    <div className="navbar-menu hero is-small">
+    <div className="hero is-small">
   <div className="hero-body">
 
     {props.auth.isAuthenticated
@@ -28,7 +28,7 @@ function Nav(props) {
               </div>
             )}
           >
-            <img style={{ borderRadius: "50%", marginRight: '1vw' }} className="image is-64x64" src={props.auth.user.img} onError={e => profileImgError(e)}/>
+            <img style={{ borderRadius: "50%", marginRight: '1vw' }} className="navImage" src={props.auth.user.img} onError={e => profileImgError(e)}/>
           </Tooltip>
           <Link style={{marginTop: '0.4vw'}} className={buttonStyle} to="/">Home</Link>
           <button style={{ marginLeft: '1vw', marginTop: '0.4vw' }} className={buttonStyle} onClick={() => props.dispatch(logoutUser())}>Logout</button>
