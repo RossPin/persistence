@@ -88,7 +88,8 @@ function makeIntention(game, game_id, autoPlayer, callback) {
   const {id: mission_id, mission_num} = game.currentMission
   autoPlayer.intention = mission_id
   if (autoPlayer.role === 'spy') {
-    const failFactor = (0.2 + (mission_num)/5)/(spyCanWin(game) ? 1 : numSpiesOnMission(game)) // probability of playing fail reduced by number of other spies on mission unless game can be won this mission 
+    let failFactor = (0.2 + (mission_num)/5)/((spyCanWin(game)) ? 1 : numSpiesOnMission(game)) // probability of playing fail reduced by number of other spies on mission unless game can be won this mission 
+    if (twoFailsNeeded(game)) failFactor = numSpiesOnMission(game) >= 2 ? 0.95 : 0.1 //if not two spys on mission shouldn't fail when 2 fails required
     intention = Math.random() > failFactor
     console.log(failFactor, spyCanWin(game), numSpiesOnMission(game))
   }
@@ -98,6 +99,11 @@ function makeIntention(game, game_id, autoPlayer, callback) {
       callback({currentGame: game})
     })
   })
+}
+
+function twoFailsNeeded(game) {
+  const {mission_num} = game.currentMission
+  return game.missionParams[mission_num-1].fails_needed > 1
 }
 
 function spyCanWin(game){
