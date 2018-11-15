@@ -42,9 +42,11 @@ module.exports = http => {
         })
 
         socket.on('updateGameRoom', (gameData, gameId) => {
-            io.to(gameId).emit('receiveUpdateGame', gameData)
-            handleAutoPlay(gameId)
-            if (gameData.currentGame.game.is_finished) delete currentGames[gameId]
+            io.to(gameId).emit('receiveUpdateGame', gameData)            
+            if (gameData.currentGame.game.is_finished) setTimeout(() => {
+              delete currentGames[gameId]
+            },90000)
+            else handleAutoPlay(gameId)
         })
 
         socket.on('startReveal', (gameId) => {
