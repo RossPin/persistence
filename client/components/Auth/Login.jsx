@@ -14,6 +14,11 @@ class Login extends React.Component {
     this.submit = this.submit.bind(this)
     this.guestLogin = this.guestLogin.bind(this)
   }
+
+  componentDidMount(newProps){
+    if (this.props.auth.isAuthenticated) this.props.history.push('/lobby')
+  }
+
   componentWillReceiveProps(newProps){
     if (newProps.auth.isAuthenticated) newProps.history.push('/lobby')
   }
