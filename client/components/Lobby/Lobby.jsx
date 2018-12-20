@@ -54,7 +54,7 @@ class Lobby extends React.Component {
         <br />
         <div className="columns is-4 is-multiline">
           {games.map((game, i) => {
-            if (!game.in_progress || game.playerIds.includes(user.id)) return (
+            if ((!game.in_progress || game.playerIds.includes(user.id)) && !game.is_finished) return (
               <div key={i} className="column is-4">
                 <button onClick={() => this.handleJoinGame(game, user)} className={buttonStyling}>{game.game_name}</button>
               </div>
