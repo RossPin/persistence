@@ -14,6 +14,10 @@ class Login extends React.Component {
     this.submit = this.submit.bind(this)
     this.guestLogin = this.guestLogin.bind(this)
   }
+  componentWillReceiveProps(newProps){
+    if (newProps.auth.isAuthenticated) newProps.history.push('/lobby')
+  }
+
   updateDetails(e) {
     this.setState({[e.target.name]: e.target.value})
   }
@@ -48,4 +52,8 @@ class Login extends React.Component {
   }
 }
 
-export default connect()(Login)
+const mapStateToProps = ({auth}) => {
+  return {auth}
+}
+
+export default connect(mapStateToProps)(Login)
